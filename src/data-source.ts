@@ -13,7 +13,6 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME,
   synchronize: false,
   logging: false,
-  // entities: [Hero],
   migrations: [],
   subscribers: [],
 });

@@ -25,7 +25,7 @@ AppDataSource.initialize()
     /************************************************
      * Data's routes
      */
-    app.use("/api/heros", planteRouter);
+    app.use("/api/plante", planteRouter);
 
     // Bind express server on port 3004
     app.listen(port, () => {

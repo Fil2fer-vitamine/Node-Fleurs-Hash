@@ -58,7 +58,7 @@ export class PlanteController {
         status: "FAILED",
         data: {
           error:
-            "One of the following keys is missing or is empty in request body: 'name', 'unitprice_ati', 'quantity', 'category', 'rating', 'url_picture'",
+            "Aïe Aïe Aïe !!! One of the following keys is missing or is empty in request body: 'name', 'unitprice_ati', 'quantity', 'category', 'rating', 'url_picture'",
         },
       });
       return;
