@@ -30,7 +30,7 @@ AppDataSource.initialize()
     // Bind express server on port 3004
     app.listen(port, () => {
       console.log(
-        `Express server has started on port ${port}. Open http://localhost:${port} to see results`
+        `Express server est démarré sur la port ${port}. Ouverture de http://localhost:${port} pour voir ceci.`
       );
     });
   })

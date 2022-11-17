@@ -82,6 +82,7 @@ export class PlanteController {
       ...req.body,
     };
     const paramId = req.params.id;
+    console.log("Que se passe-t'il au niveau du CONTROLLER ??? :", changes);
     if (!paramId) {
       res.status(400).send({
         status: 'FAILED',
@@ -93,7 +94,7 @@ export class PlanteController {
         status: "FAILED",
         data: {
           error:
-            "One of the following keys is missing or is empty in request body: 'name', 'unitprice_ati', 'quantity', 'category', 'rating', 'url_picture'",
+            "One of the following keys is missing or is empty in request body: 'name', 'unitprice_ati', 'quantity', 'category', 'rathing', 'url_picture'",
         },
       });
       return;

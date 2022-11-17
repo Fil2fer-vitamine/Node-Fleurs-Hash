@@ -22,7 +22,7 @@ export class PlanteService {
 
   updateOnePlante(id: number, changes: Plante): Promise<Plante> {
     return AppDataSource.query(
-      `UPDATE User SET name = ${changes.name}, unitprice_ati = ${changes.unitprice_ati}, quantity = ${changes.quantity}, category = ${changes.category}, rathing = ${changes.rathing}, url_picture = ${changes.url_picture}`
+      `UPDATE plantesncf SET name = '${changes.name}', unitprice_ati = ${changes.unitprice_ati}, quantity = ${changes.quantity}, category = '${changes.category}', rathing = ${changes.rathing}, url_picture = '${changes.url_picture}'`
     );
   }
 
