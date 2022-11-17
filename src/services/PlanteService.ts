@@ -16,13 +16,13 @@ export class PlanteService {
 
   createNewPlante(newPlante: Plante): Promise<Plante> {
     return AppDataSource.query(
-      `INSERT INTO plantesncf (name, unitprice_ati, quantity, category, rating, url_picture) VALUES (${newPlante.name}, ${newPlante.unitprice_ati}, ${newPlante.quantity}, ${newPlante.category}, ${newPlante.rating}, ${newPlante.url_picture})`
+      `INSERT INTO plantesncf (name, unitprice_ati, quantity, category, rathing, url_picture) VALUES ('${newPlante.name}', ${newPlante.unitprice_ati}, ${newPlante.quantity}, '${newPlante.category}', ${newPlante.rathing}, '${newPlante.url_picture}')`
     );
   }
 
   updateOnePlante(id: number, changes: Plante): Promise<Plante> {
     return AppDataSource.query(
-      `UPDATE User SET name = ${changes.name}, unitprice_ati = ${changes.unitprice_ati}, quantity = ${changes.quantity}, category = ${changes.category}, rating = ${changes.rating}, url_picture = ${changes.url_picture}`
+      `UPDATE User SET name = ${changes.name}, unitprice_ati = ${changes.unitprice_ati}, quantity = ${changes.quantity}, category = ${changes.category}, rathing = ${changes.rathing}, url_picture = ${changes.url_picture}`
     );
   }
 

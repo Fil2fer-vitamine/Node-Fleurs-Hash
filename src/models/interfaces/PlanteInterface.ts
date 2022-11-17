@@ -3,7 +3,7 @@ interface Plante {
   unitprice_ati: number;
   quantity: number;
   category: string;
-  rating: number;
+  rathing: number;
   url_picture: string;
 }
 

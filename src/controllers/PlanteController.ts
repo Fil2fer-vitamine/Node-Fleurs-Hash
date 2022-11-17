@@ -51,7 +51,7 @@ export class PlanteController {
       newPlante.unitprice_ati === undefined ||
       newPlante.quantity === undefined ||
       newPlante.category === undefined ||
-      newPlante.rating === undefined ||
+      newPlante.rathing === undefined ||
       newPlante.url_picture === undefined
     ) {
       res.status(400).send({
@@ -88,7 +88,7 @@ export class PlanteController {
         data: { error: "Parameter 'id' can not be empty" },
       });
       return;
-    } else if (!changes.name || !changes.unitprice_ati || !changes.quantity || !changes.category || !changes.rating || !changes.url_picture) {
+    } else if (!changes.name || !changes.unitprice_ati || !changes.quantity || !changes.category || !changes.rathing || !changes.url_picture) {
       res.status(400).send({
         status: "FAILED",
         data: {
