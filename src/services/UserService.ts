@@ -1,5 +1,5 @@
-import { AppDataSource } from '../data-source';
-import User from '../models/interfaces/UserInterface';
+import { AppDataSource } from "../data-source";
+import User from "../models/interfaces/UserInterface";
 
 /**
  * Le role du service est d'aller chercher les données,
@@ -7,24 +7,26 @@ import User from '../models/interfaces/UserInterface';
  */
 export class UserService {
   getAllUsers(): Promise<User[]> {
-    return AppDataSource.query(`SELECT * FROM plantesncf;`);
+    return AppDataSource.query(`SELECT * FROM utilisateur;`);
   }
 
   getOneUserById(id: number): Promise<User> {
-    return AppDataSource.query(`SELECT name FROM plantesncf where id = ${id}`);
+    return AppDataSource.query(`SELECT nom FROM utilisateur where id = ${id}`);
   }
 
   createNewUser(newUser: User): Promise<any> {
     return AppDataSource.query(
-      `INSERT INTO plantesncf (name, email) VALUES (${newUser.name}, ${newUser.email})`
+      `INSERT INTO utilisateur (nom, email, password) VALUES ('${newUser.nom}', '${newUser.email}', '${newUser.password}')`
     );
   }
 
   updateOneUser(id: number, changes: User): Promise<User> {
-    return AppDataSource.query(`UPDATE User SET name = ${changes.name}, email =${changes.email}`);
+    return AppDataSource.query(
+      `UPDATE utilisateur SET nom = '${changes.nom}', email = '${changes.email}', password = '${changes.password}'`
+    );
   }
 
   deleteOneUser(id: number): Promise<User> {
-    return AppDataSource.query(`DELETE FROM user where id = ${id}`);
+    return AppDataSource.query(`DELETE FROM utilisateur where id = ${id}`);
   }
 }

@@ -1,13 +1,25 @@
-import * as express from "express";
+import express from "express";
 import * as dotenv from "dotenv";
 import { PlanteController } from "./controllers/PlanteController";
 import * as path from "path";
 import planteRouter from "./routes/PlanteRoute";
 import { AppDataSource } from "./data-source";
 import bodyParser = require("body-parser");
+import userRouter from "./routes/UserRoute";
 
 // Init environment variables (see .env.local file if it doesn't exist go to README.md file)
 dotenv.config({ path: ".env.local" });
+
+/**
+ * Pour tester le hashage du mot de passe
+ */
+const infoDeConnexion = {
+  email: "gg@gmail.com",
+  password: "222222",
+};
+/**
+ * Pour tester le hashage du mot de passe  --> demander la vidéo à Etienne Pommente. 18/11/2022 10H45
+ */
 
 AppDataSource.initialize()
   .then(async () => {
@@ -26,6 +38,7 @@ AppDataSource.initialize()
      * Data's routes
      */
     app.use("/api/plante", planteRouter);
+    app.use("/api/user", userRouter);
 
     // Bind express server on port 3004
     app.listen(port, () => {

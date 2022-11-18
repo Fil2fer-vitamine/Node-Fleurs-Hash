@@ -27,6 +27,6 @@ export class PlanteService {
   }
 
   deleteOnePlante(id: number): Promise<Plante> {
-    return AppDataSource.query(`DELETE FROM user where id = ${id}`);
+    return AppDataSource.query(`DELETE FROM plantesncf where id = ${id}`);
   }
 }

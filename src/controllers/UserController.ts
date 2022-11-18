@@ -1,31 +1,35 @@
-import { Request, Response } from 'express';
-import User from '../models/interfaces/UserInterface';
-import { UserService } from '../services/UserService';
+import { Request, Response } from "express";
+import User from "../models/interfaces/UserInterface";
+import { UserService } from "../services/UserService";
+import bcrypt from "bcrypt"; // pour hasher le password
 
 /**
- * Le role du controlleur est de gérer les requêtes,
- * il fait appelle au service qui lui permet de rappatrier
- * les données.
+ * Le role du controlleur est de gérer les requêtes, il fait appelle au service qui lui permet de rappatrier les données.
  */
+
 export class UserController {
   public userService = new UserService();
+
+  /** -------------------- Partie Visualisation de tous les utilisateurs ------------------------ */
 
   async getAllUser(req: Request, res: Response): Promise<void> {
     try {
       const allUsers = await this.userService.getAllUsers();
-      res.send({ status: 'OK', data: allUsers });
+      res.send({ status: "OK", data: allUsers });
     } catch (error: any) {
       res
         .status(error?.status || 500)
-        .send({ status: 'FAILED', data: { error: error?.message || error } });
+        .send({ status: "FAILED", data: { error: error?.message || error } });
     }
   }
+
+  /** --------------- Partie Visualisation de d'un des des utilisateurs par son Id --------------- */
 
   async getOneUserById(req: Request, res: Response): Promise<void> {
     const paramId = req.params.id;
     if (!paramId) {
       res.status(400).send({
-        status: 'FAILED',
+        status: "FAILED",
         data: { error: "Parameter 'id' can not be empty" },
       });
       return;
@@ -33,45 +37,63 @@ export class UserController {
     try {
       const id = parseInt(paramId);
       const onePlante = await this.userService.getOneUserById(id);
-      res.send({ status: 'OK', data: onePlante });
+      res.send({ status: "OK", data: onePlante });
     } catch (error: any) {
       res
         .status(error?.status || 500)
-        .send({ status: 'FAILED', data: { error: error?.message || error } });
+        .send({ status: "FAILED", data: { error: error?.message || error } });
     }
   }
+
+  /** -------------------- Partie Visualisation de création d'un utilisateur ------------------------ */
 
   async createNewUser(req: Request, res: Response): Promise<void> {
-    const newUser: User = {
-      ...req.body,
-    };
-    console.log(newUser);
-    if (
-      !newUser.name ||
-      newUser.email === undefined    
-    ) {
-      res.status(400).send({
-        status: "FAILED",
-        data: {
-          error:
-            "One of the following keys is missing or is empty in request body: 'name', 'email'",
-        },
-      });
-      return;
-    }
+    // on veut hasher le mot de passe dès l'inscription et le garder en mémoire dans la base de données.
+    // Utilisation de bcrypt.
+    bcrypt.hash(req.body.password, 10).then(async (hash) => {
+      // Store hash in your password DB.
+      console.log("message mot de passe hashé :", hash);
+      const newUser: User = {
+        // id: req.body.id,
+        nom: req.body.nom,
+        email: req.body.email,
+        password: hash,
+      };
 
-    try {
-      await this.userService.createNewUser(newUser);
-      res.status(201).send({
-        status: 'OK',
-        message: `New User created`,
-      });
-    } catch (error: any) {
-      res
-        .status(error?.status || 500)
-        .send({ status: 'FAILED', data: { error: error?.message || error } });
-    }
+      console.log("newUser", newUser);
+
+      if (
+        !newUser.nom === undefined || // Si on n'a pas tous les champs valides, on ne fait rien ...
+        newUser.email === undefined ||
+        newUser.password === undefined
+      ) {
+        console.log(newUser);
+
+        res.status(400).send({
+          status: "FAILLED",
+          data: {
+            error: "Le nom, l'email ou le mot de passe sont requis",
+          },
+        });
+        return;
+      }
+
+      try {
+        await this.userService.createNewUser(newUser);
+        res.status(201).send({
+          status: "OK",
+          message: `New User created`,
+          data: newUser,
+        });
+      } catch (error: any) {
+        res
+          .status(error?.status || 500)
+          .send({ status: "FAILED", data: { error: error?.message || error } });
+      }
+    });
   }
+
+  /** ------------- Partie Visualisation d'une modif d'un Utilisateur de par l'Id --------------- */
 
   async updateOneUser(req: Request, res: Response): Promise<void> {
     const changes: User = {
@@ -80,16 +102,16 @@ export class UserController {
     const paramId = req.params.id;
     if (!paramId) {
       res.status(400).send({
-        status: 'FAILED',
+        status: "FAILED",
         data: { error: "Parameter 'id' can not be empty" },
       });
       return;
-    } else if (!changes.name || !changes.email) {
+    } else if (!changes.nom || !changes.email) {
       res.status(400).send({
         status: "FAILED",
         data: {
           error:
-            "One of the following keys is missing or is empty in request body: 'name', 'email'",
+            "One of the following keys is missing or is empty in request body: 'name', 'email', 'password'",
         },
       });
       return;
@@ -99,21 +121,23 @@ export class UserController {
       const id = parseInt(paramId);
       await this.userService.updateOneUser(id, changes);
       res.status(201).send({
-        status: 'OK',
+        status: "OK",
         message: `User with id ${id} updated`,
       });
     } catch (error: any) {
       res
         .status(error?.status || 500)
-        .send({ status: 'FAILED', data: { error: error?.message || error } });
+        .send({ status: "FAILED", data: { error: error?.message || error } });
     }
   }
+
+  /** -------------------- Partie Visualisation suppression d'un utilisateur ------------------------ */
 
   async deleteOneUser(req: Request, res: Response): Promise<void> {
     const paramId = req.params.id;
     if (!paramId) {
       res.status(400).send({
-        status: 'FAILED',
+        status: "FAILED",
         data: { error: "Parameter 'id' can not be empty" },
       });
       return;
@@ -124,11 +148,11 @@ export class UserController {
       await this.userService.deleteOneUser(id);
       res
         .status(200)
-        .send({ status: 'OK', message: `User with id ${id} removed` });
+        .send({ status: "OK", message: `User with id ${id} removed` });
     } catch (error: any) {
       res
         .status(error?.status || 500)
-        .send({ status: 'FAILED', data: { error: error?.message || error } });
+        .send({ status: "FAILED", data: { error: error?.message || error } });
     }
   }
 }

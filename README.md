@@ -8,25 +8,28 @@ To start you have to type this line to install dependencies
 npm i
 ```
 
-Dependencies : 
-- express 
-  
-Dev dependencies : 
-- @types/express 
-- typescript 
+Dependencies :
+
+- express
+
+Dev dependencies :
+
+- @types/express
+- typescript
 - ts-node
 - nodemon
 
-## Important 
+## Important
 
 You have to create your own `.env.local` file based on `.env.template` file
 
 (Tu dois créer ton propre fichier `.env.local` en prenant comme modèle le fichier `.env.template`)
 
 ## Info init project
-You __don't have to do this__, I already executed it while project initialization.
 
-(Tu __n'as pas à executer__, c'est ce que j'ai fais pour initialiser le projet)
+You **don't have to do this**, I already executed it while project initialization.
+
+(Tu **n'as pas à executer**, c'est ce que j'ai fais pour initialiser le projet)
 
 Initialization of `package.json` file
 
@@ -51,14 +54,21 @@ Initialization of `tsconfig.json` file
 ```bash
 tsc --init
 ```
+
 and comment this option `"esModuleInterop": true`
 
-Installation of dependencies : 
+Installation of dependencies :
+
 ```bash
 npm i express
 ```
 
-Installation of dev dependencies : 
+Installation of dev dependencies :
+
 ```bash
 npm i -D typescript @types/express ts-node nodemon
 ```
+
+17 11 2022
+npm install --save @types/bcrypt
+npm install --save @types/jsonwebtoken
