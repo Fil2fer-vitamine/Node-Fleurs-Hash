@@ -4,7 +4,8 @@ import { UserService } from "../services/UserService";
 import bcrypt from "bcrypt"; // pour hasher le password
 
 /**
- * Le role du controlleur est de gérer les requêtes, il fait appelle au service qui lui permet de rappatrier les données.
+ * Le role du controlleur est de gérer les requêtes, il fait appel au service qui lui permet de rappatrier les données.
+ * Quand il y a notion de base de données, il y a notion de serveurs : il y a asynchronisme entre le moment où l'on demande (de par une reqyête) et le moment où l'on reçoit une réponse du serveur.
  */
 
 export class UserController {
@@ -16,6 +17,7 @@ export class UserController {
     try {
       const allUsers = await this.userService.getAllUsers();
       res.send({ status: "OK", data: allUsers });
+      console.log(allUsers);
     } catch (error: any) {
       res
         .status(error?.status || 500)
@@ -48,35 +50,49 @@ export class UserController {
   /** -------------------- Partie Visualisation de création d'un utilisateur ------------------------ */
 
   async createNewUser(req: Request, res: Response): Promise<void> {
+    console.log("UserController - createNewUser - body : ", req.body);
+
+    // extraire les information du body pour s'en faire un objet
+    const newUser: User = {
+      // id: req.body.id,
+      nom: req.body.nom,
+      email: req.body.email,
+      password: req.body.password,
+    };
+
+    // vérifier que nous avons toute les info nécessaire à notre dispo
+    if (
+      newUser.nom === undefined || // Si on n'a pas tous les champs valides, on ne fait rien ...
+      newUser.email === undefined ||
+      newUser.password === undefined
+    ) {
+      console.log(newUser);
+
+      res.status(400).send({
+        status: "FAILLED",
+        data: {
+          error:
+            "Le nom, l'email ou le mot de passe est requis : apparemment, l'un des trois champs est absent !!!",
+        },
+      });
+      return;
+    }
+
     // on veut hasher le mot de passe dès l'inscription et le garder en mémoire dans la base de données.
-    // Utilisation de bcrypt.
+    // Utilisation de bcrypt. Le Hash est suivi du salage 'salt' au nombre de 10.
     bcrypt.hash(req.body.password, 10).then(async (hash) => {
       // Store hash in your password DB.
       console.log("message mot de passe hashé :", hash);
-      const newUser: User = {
+
+      /*const newUser: User = {
         // id: req.body.id,
         nom: req.body.nom,
         email: req.body.email,
         password: hash,
-      };
+      };*/
+      newUser.password = hash;
 
       console.log("newUser", newUser);
-
-      if (
-        !newUser.nom === undefined || // Si on n'a pas tous les champs valides, on ne fait rien ...
-        newUser.email === undefined ||
-        newUser.password === undefined
-      ) {
-        console.log(newUser);
-
-        res.status(400).send({
-          status: "FAILLED",
-          data: {
-            error: "Le nom, l'email ou le mot de passe sont requis",
-          },
-        });
-        return;
-      }
 
       try {
         await this.userService.createNewUser(newUser);
@@ -155,4 +171,8 @@ export class UserController {
         .send({ status: "FAILED", data: { error: error?.message || error } });
     }
   }
+
+  /** -------------------- Partie Visualisation login d'un utilisateur ------------------------ */
+
+  async loginNewUser(req: Request, res: Response): Promise<void> {}
 }

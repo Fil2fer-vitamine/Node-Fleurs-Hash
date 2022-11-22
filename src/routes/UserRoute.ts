@@ -13,7 +13,10 @@ userRouter.get("/:id", (req, res) => userController.getOneUserById(req, res));
  * Il y a deux routes pour l'identification.
  */
 
-userRouter.post("/", (req, res) => userController.createNewUser(req, res)); // Pour inscription signup
+userRouter.post("/inscription", (req, res) => {
+  console.log("coucou");
+  userController.createNewUser(req, res);
+}); // Pour inscription signup
 // il faudra également une route pour le login ...
 
 /**
